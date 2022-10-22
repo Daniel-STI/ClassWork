@@ -1,0 +1,66 @@
+/*
+1. Get the decimal number from the user.
+2. Convert the decimal number to a binary number and print.
+3. Convert the decimal number to an octal number and print.
+4. Convert the decimal number to a hexadecimal number and print.
+*/
+#include <stdio.h>
+#include <cs50.h>
+
+int dbase[101]={};              //This array is used to store the converted numbers, each element in the array is a digit of the number.
+int print(){
+    int i;
+    for(i=101;dbase[i]==0;i--);
+    //This will find the first non-zero digit so it does not any zeros in the final result.
+
+    for(int j=i;j>=0;j--){              //Since the array stores numbers in reverse order, it also prints in reverse order.
+
+        if(dbase[j]>=10)                //If the single digit is greater than 10, it must be represented by a letter.
+            printf("%c",dbase[j]+55);
+        else
+            printf("%d",dbase[j]);
+    }
+    printf("\n");
+    return 0;
+}
+int conversion(int base, int deci){
+    //The first int is the target base and the second int is the decimal number.
+
+    int t,i,j;
+    for(i=1;i<=101;i++)
+        dbase[i]=0;
+    //Make all the digits 0. This will reset the array if there are numbers stored from previous conversions.
+
+    while(deci>0){              //This while loop keeps running until the decimal number reaches zero which means it is fully converted.
+        t=1;
+        i=0;
+        j=0;
+        while(deci>=base*t){
+            t*=base;
+            i++;
+        }
+        //Finds the biggest exponent of the base that is less than the decimal number. t stores this number and i records the power(digit).
+
+        while(deci>=t){
+            deci-=t;
+            j++;
+        }
+        //Subtract as many t as possible from the decimal number. j records how many times it has been subtracted.
+
+        dbase[i]=j;
+        //i is the digit and j is the number on that digit.
+    }
+    print();
+    return 0;
+}
+int main(){
+    int n,i,t;
+    n=get_int("What is the decimal number? ");
+    printf("Binary: ");
+    conversion(2,n);
+    printf("Octal: ");
+    conversion(8,n);
+    printf("Hexadecimal: ");
+    conversion(16,n);
+    return 0;
+}
